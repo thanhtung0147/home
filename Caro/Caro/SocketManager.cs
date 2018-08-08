@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -57,6 +58,27 @@ namespace Caro
         private bool ReceiveData(Socket target, byte[] data)
         {
             return target.Receive(data) == 1 ? true : false;
+        }
+
+        public string GetLocalIPv4(NetworkInterfaceType _type)
+        {
+            string output = "";
+
+            foreach(NetworkInterface item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (item.NetworkInterfaceType == _type && item.OperationalStatus == OperationalStatus.Up)
+                {
+                    foreach(UnicastIPAddressInformation ip in item.GetIPProperties().UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            output = ip.Address.ToString();
+                        }
+                    }
+                }
+            }
+
+            return output;
         }
         #endregion
 
