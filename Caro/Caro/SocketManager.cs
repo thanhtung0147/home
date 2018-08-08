@@ -13,13 +13,12 @@ namespace Caro
 {
     public class SocketManager
     {
-
-        #region Parameters
         public string IP = "127.0.0.1";
         public int PORT = 9999;
         public const int BUFFER = 1024;
         public bool isServer = true;
 
+        #region Action
         public byte[] SerializeData(Object o)
         {
             MemoryStream ms = new MemoryStream();
@@ -47,7 +46,18 @@ namespace Caro
             return target.Send(data) == 1 ? true : false;
         }
 
-        public bool Receive() { }
+        public object Receive()
+        {
+            byte[] receiveData = new byte[BUFFER];
+            bool isOk = ReceiveData(client, receiveData);
+
+            return DeserializeData(receiveData);
+        }
+
+        private bool ReceiveData(Socket target, byte[] data)
+        {
+            return target.Receive(data) == 1 ? true : false;
+        }
         #endregion
 
         #region Client
