@@ -1,0 +1,91 @@
+﻿<Window x:Class="Music_MP3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:Music_MP3"
+        xmlns:local="clr-namespace:Music_MP3"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="650" Width="525">
+
+    <Window.Resources>
+        <ResourceDictionary Source="MainStyle.xaml"></ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid x:Name="gridTop10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!--Main Control-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <ToggleButton IsChecked="{Binding IsCheckVN}">BXH Viet Nam</ToggleButton>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <ToggleButton IsChecked="{Binding IsCheckEU}">BXH Au My</ToggleButton>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <ToggleButton IsChecked="{Binding IsCheckKO}">BXH Han Quoc</ToggleButton>
+                </Grid>
+            </Grid>
+            <!--End of Main Control-->
+
+            <!--List top 10 songs-->
+            <Grid Grid.Row="1">
+                <ListBox x:Name="lsbTopSongs" HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Height="50" BorderThickness="2" BorderBrush="Black">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                        <ColumnDefinition Width="50"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid>
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">01</TextBlock>
+                                    </Grid>
+
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <TextBlock HorizontalAlignment="Left">Ten Bai Hat</TextBlock>
+                                        </Grid>
+
+                                        <Grid Grid.Row="1">
+                                            <TextBlock HorizontalAlignment="Left">Ten Ca Si</TextBlock>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid Grid.Column="2">
+                                        <Button Click="Button_Click">Play</Button>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <!--End of List top 10 songs-->
+            
+        </Grid>
+        <uc:Song_PlayUC x:Name="ucSong_Play" Visibility="Hidden"></uc:Song_PlayUC>
+    </Grid>
+</Window>
