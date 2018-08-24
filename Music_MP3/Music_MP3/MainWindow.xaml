@@ -27,21 +27,21 @@
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <!--<ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>-->
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
                     <ToggleButton IsChecked="{Binding IsCheckVN}">BXH Viet Nam</ToggleButton>
                 </Grid>
 
-                <Grid Grid.Column="1">
+                <!--<Grid Grid.Column="1">
                     <ToggleButton IsChecked="{Binding IsCheckEU}">BXH Au My</ToggleButton>
                 </Grid>
 
                 <Grid Grid.Column="2">
                     <ToggleButton IsChecked="{Binding IsCheckKO}">BXH Han Quoc</ToggleButton>
-                </Grid>
+                </Grid>-->
                 
             </Grid>
             <!--End of Main Control-->
@@ -60,7 +60,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Grid>
-                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">01</TextBlock>
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding STT}"></TextBlock>
                                     </Grid>
 
                                     <Grid Grid.Column="1">
@@ -70,11 +70,11 @@
                                         </Grid.RowDefinitions>
 
                                         <Grid>
-                                            <TextBlock HorizontalAlignment="Left">Ten Bai Hat</TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{Binding SongName}"></TextBlock>
                                         </Grid>
 
                                         <Grid Grid.Row="1">
-                                            <TextBlock HorizontalAlignment="Left">Ten Ca Si</TextBlock>
+                                            <TextBlock HorizontalAlignment="Left" Text="{Binding SingerName}"></TextBlock>
                                         </Grid>
                                     </Grid>
 
