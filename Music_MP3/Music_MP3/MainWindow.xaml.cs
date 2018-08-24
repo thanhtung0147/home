@@ -30,7 +30,7 @@ namespace Music_MP3
         private bool isCheckKO;
 
         private List<Song> listVN;
-        private List<Song> listEU;
+        private List<Song> listUS;
         private List<Song> listKO;
 
         public bool IsCheckVN { get => isCheckVN; set { isCheckVN = value; isCheckEU = false; isCheckKO = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
@@ -38,8 +38,8 @@ namespace Music_MP3
         public bool IsCheckKO { get => isCheckKO; set { isCheckKO = value; isCheckEU = false; isCheckVN = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
 
         public List<Song> ListVN { get => listVN; set => listVN = value; }
-        public List<Song> ListEU { get => listEU; set => listEU = value; }
         public List<Song> ListKO { get => listKO; set => listKO = value; }
+        public List<Song> ListUS { get => listUS; set => listUS = value; }
 
         public MainWindow()
         {
@@ -54,7 +54,7 @@ namespace Music_MP3
             IsCheckVN = true;
 
             ListVN = new List<Song>();
-            ListEU = new List<Song>();
+            ListUS = new List<Song>();
             ListKO = new List<Song>();
 
             CrawlBXH();
@@ -63,24 +63,35 @@ namespace Music_MP3
         void CrawlBXH()
         {
             HttpRequest http = new HttpRequest();
-            string htmlBXH = http.Get(@"https://mp3.zing.vn/zing-chart/bai-hat.html").ToString();
-            string bxhPattern = @"<div class=""widget widget-tab"">(.*?)</ul>";
-            var listBXH = Regex.Matches(htmlBXH, bxhPattern, RegexOptions.Singleline);
+            string htmlBXH_VN = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-Viet-Nam/IWZ9Z08I.html").ToString();
+            string htmlBXH_US = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-US-UK/IWZ9Z0BW.html").ToString();
+            string htmlBXH_KO = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-KPop/IWZ9Z0BO.html").ToString();
 
-            string bxhVN = listBXH[0].ToString();
-            var listSongHTML = Regex.Matches(bxhVN, @"<li>(.*?)</li>", RegexOptions.Singleline);
+            AddSongToListSong(ListVN, htmlBXH_VN);
+            AddSongToListSong(ListKO, htmlBXH_KO);
+            AddSongToListSong(ListUS, htmlBXH_US);
+        }
 
-            foreach (var item in listSongHTML)
+        void AddSongToListSong(List<Song> listSong, string html)
+        {
+            var bxh = Regex.Matches(html, @"<div class=""group po-r"">(.*?)</div>", RegexOptions.Singleline);
+
+            for (int i = 0; i < bxh.Count; i++)
             {
-                var songAndSinger = Regex.Matches(item.ToString(), @"<a\s\S*\stitle=""(.*?)""", RegexOptions.Singleline);
+                var songAndSinger = Regex.Matches(bxh[i].ToString(), @"<a\s\S*\stitle=""(.*?)""", RegexOptions.Singleline);
 
-                string songString = songAndSinger[0].ToString();
+                string songString = songAndSinger[1].ToString();
                 int indexSong = songString.IndexOf("title=\"");
-                string songName = songString.Substring(indexSong, songString.Length - indexSong - 1).Replace("title =\"","");
+                string songName = songString.Substring(songString.IndexOf("title=\""), songString.Length - indexSong - 1).Replace("title=\"", "");
 
-                string singerString = songAndSinger[1].ToString();
+                string singerString = songAndSinger[2].ToString();
                 int indexSinger = singerString.IndexOf("title=\"");
-                string singerName = singerString.Substring(indexSinger, singerString.Length - indexSinger - 1).Replace("title =\"", "");
+                string singerName = singerString.Substring(singerString.IndexOf("title=\""), singerString.Length - indexSinger - 1).Replace("title=\"Nghệ sĩ ", "");
+
+                int indexURL = songString.IndexOf("href=\"");
+                string URL = songString.Substring(indexURL, indexSong - indexURL - 2).Replace("href=\"", "");
+
+                listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1 });
             }
         }
 

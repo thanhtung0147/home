@@ -11,11 +11,11 @@ namespace Music_MP3
         private string songName;
         private string singerName;
         private string songURL;
-        private string sTT;
+        private int sTT;
 
         public string SongName { get => songName; set => songName = value; }
         public string SingerName { get => singerName; set => singerName = value; }
         public string SongURL { get => songURL; set => songURL = value; }
-        public string STT { get => sTT; set => sTT = value; }
+        public int STT { get => sTT; set => sTT = value; }
     }
 }
