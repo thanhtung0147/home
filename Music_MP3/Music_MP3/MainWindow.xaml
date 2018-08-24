@@ -14,7 +14,9 @@
     </Window.Resources>
 
     <Grid>
+        
         <Grid x:Name="gridTop10">
+            
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
@@ -22,6 +24,7 @@
 
             <!--Main Control-->
             <Grid>
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -39,6 +42,7 @@
                 <Grid Grid.Column="2">
                     <ToggleButton IsChecked="{Binding IsCheckKO}">BXH Han Quoc</ToggleButton>
                 </Grid>
+                
             </Grid>
             <!--End of Main Control-->
 
