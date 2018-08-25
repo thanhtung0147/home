@@ -49,7 +49,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="xNet">
-      <HintPath>..\..\..\Software\xNet\xNet.dll</HintPath>
+      <HintPath>..\..\..\..\..\Softs\Visual Studio 2017\xNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

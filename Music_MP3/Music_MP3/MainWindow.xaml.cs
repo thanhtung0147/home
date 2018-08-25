@@ -34,13 +34,13 @@ namespace Music_MP3
         private ObservableCollection<Song> listUS;
         private ObservableCollection<Song> listKO;
 
-        public bool IsCheckVN { get => isCheckVN; set { isCheckVN = value; lsbTopSongs.ItemsSource = ListVN; } } //isCheckEU = false; isCheckKO = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
-        //public bool IsCheckEU { get => isCheckEU; set { isCheckEU = value; isCheckVN = false; isCheckKO = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
-        //public bool IsCheckKO { get => isCheckKO; set { isCheckKO = value; isCheckEU = false; isCheckVN = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
+        public bool IsCheckVN { get => isCheckVN; set { isCheckVN = value; lsbTopSongs.ItemsSource = ListVN; isCheckEU = false; isCheckKO = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
+        public bool IsCheckEU { get => isCheckEU; set { isCheckEU = value; lsbTopSongs.ItemsSource = ListUS; isCheckVN = false; isCheckKO = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
+        public bool IsCheckKO { get => isCheckKO; set { isCheckKO = value; lsbTopSongs.ItemsSource = ListKO; isCheckEU = false; isCheckVN = false; OnPropertyChanged("IsCheckVN"); OnPropertyChanged("IsCheckEU"); OnPropertyChanged("IsCheckKO"); } }
 
         public ObservableCollection<Song> ListVN { get => listVN; set => listVN = value; }
-        //public List<Song> ListKO { get => listKO; set => listKO = value; }
-        //public List<Song> ListUS { get => listUS; set => listUS = value; }
+        public ObservableCollection<Song> ListKO { get => listKO; set => listKO = value; }
+        public ObservableCollection<Song> ListUS { get => listUS; set => listUS = value; }
 
         public MainWindow()
         {
@@ -52,8 +52,8 @@ namespace Music_MP3
 
 
             ListVN = new ObservableCollection<Song>();
-            //ListUS = new List<Song>();
-            //ListKO = new List<Song>();
+            ListUS = new ObservableCollection<Song>();
+            ListKO = new ObservableCollection<Song>();
 
             IsCheckVN = true;
 
@@ -64,8 +64,12 @@ namespace Music_MP3
         {
             HttpRequest http = new HttpRequest();
             string htmlBXH_VN = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-Viet-Nam/IWZ9Z08I.html").ToString();
+            string htmlBXH_US = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-US-UK/IWZ9Z0BW.html").ToString();
+            string htmlBXH_KO = http.Get(@"https://mp3.zing.vn/zing-chart-tuan/Bai-hat-KPop/IWZ9Z0BO.html").ToString();
 
             AddSongToListSong(ListVN, htmlBXH_VN);
+            AddSongToListSong(ListUS, htmlBXH_US);
+            AddSongToListSong(ListKO, htmlBXH_KO);
         }
 
         void AddSongToListSong(ObservableCollection<Song> listSong, string html)
@@ -74,15 +78,15 @@ namespace Music_MP3
 
             for (int i = 0; i < bxh.Count; i++)
             {
-                var songAndSinger = Regex.Matches(bxh[i].ToString(), @"<a\s\S*\stitle=""(.*?)""", RegexOptions.Singleline);
+                var songAndSinger = Regex.Matches(bxh[i].ToString(), @"<a(.*?)>", RegexOptions.Singleline);
 
                 string songString = songAndSinger[1].ToString();
                 int indexSong = songString.IndexOf("title=\"");
-                string songName = songString.Substring(songString.IndexOf("title=\""), songString.Length - indexSong - 1).Replace("title=\"", "");
+                string songName = Regex.Match(songString, "title=\"(.*?)\"", RegexOptions.Singleline).ToString().Replace("title=\"", "").Replace("\"", "");
 
                 string singerString = songAndSinger[2].ToString();
                 int indexSinger = singerString.IndexOf("title=\"");
-                string singerName = singerString.Substring(singerString.IndexOf("title=\""), singerString.Length - indexSinger - 1).Replace("title=\"Nghệ sĩ ", "");
+                string singerName = singerString.Substring(singerString.IndexOf("title=\""), singerString.Length - indexSinger - 1).Replace("title=\"Nghệ sĩ ", "").Replace("\"", "");
 
                 int indexURL = songString.IndexOf("href=\"");
                 string URL = songString.Substring(indexURL, indexSong - indexURL - 2).Replace("href=\"", "");
@@ -91,8 +95,15 @@ namespace Music_MP3
                 string htmlSong = http.Get(@"https://mp3.zing.vn" + URL).ToString();
 
                 var lyrics = Regex.Matches(htmlSong, @"<p class=""fn-wlyrics fn-content""(.*?)</p>", RegexOptions.Singleline);
-                string tempLyrics = lyrics[0].ToString().Replace("<p class=\"fn-wlyrics fn-content\" data-min=\"300px\" data-max=\"auto\" style=\"overflow: hidden; height: 300px;\">", "");
-                tempLyrics = tempLyrics.Replace("<br>", "").Replace("<p>", "");
+
+                string tempLyrics = "Chua co lyric";
+
+                if (lyrics != null && lyrics.Count != 0)
+                {
+                    tempLyrics = lyrics[0].ToString();
+                    string temp = tempLyrics.Substring(0, tempLyrics.IndexOf('>') + 1);
+                    tempLyrics = tempLyrics.Replace(temp, "").Replace("<br>", "").Replace("<p>", "").Replace("</p>","");
+                }
 
                 listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1, Lyric = tempLyrics });
             }
@@ -106,6 +117,8 @@ namespace Music_MP3
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            Song song = (sender as Button).DataContext as Song;
+
             gridTop10.Visibility = Visibility.Hidden;
             ucSong_Play.Visibility = Visibility.Visible;
         }

@@ -27,21 +27,21 @@
                 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <!--<ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>-->
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
                     <ToggleButton IsChecked="{Binding IsCheckVN}">BXH Viet Nam</ToggleButton>
                 </Grid>
 
-                <!--<Grid Grid.Column="1">
+                <Grid Grid.Column="1">
                     <ToggleButton IsChecked="{Binding IsCheckEU}">BXH Au My</ToggleButton>
                 </Grid>
 
                 <Grid Grid.Column="2">
                     <ToggleButton IsChecked="{Binding IsCheckKO}">BXH Han Quoc</ToggleButton>
-                </Grid>-->
+                </Grid>
                 
             </Grid>
             <!--End of Main Control-->
