@@ -14,6 +14,7 @@ namespace Music_MP3
         private int sTT;
         private string lyric;
         private string downloadURL;
+        private string photoURL;
 
         public string SongName { get => songName; set => songName = value; }
         public string SingerName { get => singerName; set => singerName = value; }
@@ -21,5 +22,6 @@ namespace Music_MP3
         public int STT { get => sTT; set => sTT = value; }
         public string Lyric { get => lyric; set => lyric = value; }
         public string DownloadURL { get => downloadURL; set => downloadURL = value; }
+        public string PhotoURL { get => photoURL; set => photoURL = value; }
     }
 }

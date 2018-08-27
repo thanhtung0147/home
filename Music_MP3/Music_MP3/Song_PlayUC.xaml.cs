@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,11 +21,14 @@ namespace Music_MP3
     /// <summary>
     /// Interaction logic for Song_PlayUC.xaml
     /// </summary>
-    public partial class Song_PlayUC : UserControl
+    public partial class Song_PlayUC : UserControl, INotifyPropertyChanged
     {
+        private Song songInfo;
+        public Song SongInfo { get { return songInfo; } set { songInfo = value; DownloadSong(songInfo); OnPropertyChanged("SongInfo");this.DataContext = SongInfo; } }
         public Song_PlayUC()
         {
             InitializeComponent();
+            this.DataContext = SongInfo;
         }
 
         private event EventHandler backToMain;
@@ -36,6 +42,26 @@ namespace Music_MP3
         {
             if (backToMain != null)
                 backToMain(this, new EventArgs());
+        }
+
+        void DownloadSong(Song songInfo)
+        {
+            string songName = AppDomain.CurrentDomain.BaseDirectory + "Song/" + songInfo.SongName + ".mp3";
+
+            if (!File.Exists(songName))
+            {
+                WebClient wb = new WebClient();
+                wb.DownloadFile(SongInfo.DownloadURL, songName);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string newName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(newName));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -102,10 +103,18 @@ namespace Music_MP3
                 {
                     tempLyrics = lyrics[0].ToString();
                     string temp = tempLyrics.Substring(0, tempLyrics.IndexOf('>') + 1);
-                    tempLyrics = tempLyrics.Replace(temp, "").Replace("<br>", "").Replace("<p>", "").Replace("</p>","");
+                    tempLyrics = tempLyrics.Replace(temp, "").Replace("<br>", "").Replace("<p>", "").Replace("</p>", "");
                 }
 
-                listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1, Lyric = tempLyrics });
+                string getJsonURL = Regex.Match(htmlSong, @"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""(.*?)""", RegexOptions.Singleline).Value.Replace(@"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""", "").Replace("\"", "");
+                string jsonInfo = http.Get(@"https://mp3.zing.vn" + getJsonURL).ToString();
+                JObject jObject = JObject.Parse(jsonInfo);
+
+                string downloadURL = jObject["data"][0]["source_list"].ToString();
+                downloadURL = downloadURL.Substring(downloadURL.Substring(downloadURL.IndexOf("http"), downloadURL.IndexOf(",") - downloadURL.IndexOf("http") - 1));
+                string photoURL = jObject["data"][0]["cover"].ToString();
+
+                listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1, Lyric = tempLyrics, DownloadURL = downloadURL, PhotoURL = photoURL });
             }
         }
 
@@ -121,6 +130,8 @@ namespace Music_MP3
 
             gridTop10.Visibility = Visibility.Hidden;
             ucSong_Play.Visibility = Visibility.Visible;
+
+            ucSong_Play.SongInfo = song;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
