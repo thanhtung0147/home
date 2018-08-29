@@ -106,7 +106,7 @@ namespace Music_MP3
                     tempLyrics = tempLyrics.Replace(temp, "").Replace("<br>", "").Replace("<p>", "").Replace("</p>", "");
                 }
 
-                string getJsonURL = Regex.Match(htmlSong, @"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""(.*?)""", RegexOptions.Singleline).Value.Replace(@"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""", "").Replace("\"", "");
+                string getJsonURL = Regex.Match(htmlSong, @"div id=""zplayerjs-wrapper"" class=""player mt0"" data-xml=""(.*?)""", RegexOptions.Singleline).Value.Replace(@"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""", "").Replace("\"", "");
                 string jsonInfo = http.Get(@"https://mp3.zing.vn" + getJsonURL).ToString();
                 JObject jObject = JObject.Parse(jsonInfo);
 
@@ -114,7 +114,7 @@ namespace Music_MP3
                 downloadURL = downloadURL.Substring(downloadURL.Substring(downloadURL.IndexOf("http"), downloadURL.IndexOf(",") - downloadURL.IndexOf("http") - 1));
                 string photoURL = jObject["data"][0]["cover"].ToString();
 
-                listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1, Lyric = tempLyrics, DownloadURL = downloadURL, PhotoURL = photoURL });
+                listSong.Add(new Song() { SingerName = singerName, SongName = songName, SongURL = URL, STT = i + 1, Lyric = tempLyrics });//, DownloadURL = downloadURL, PhotoURL = photoURL });
             }
         }
 
