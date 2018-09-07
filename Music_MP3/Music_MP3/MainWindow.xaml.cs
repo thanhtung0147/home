@@ -106,7 +106,7 @@ namespace Music_MP3
                     tempLyrics = tempLyrics.Replace(temp, "").Replace("<br>", "").Replace("<p>", "").Replace("</p>", "");
                 }
 
-                string getJsonURL = Regex.Match(htmlSong, @"div id=""zplayerjs-wrapper"" class=""player mt0"" data-xml=""(.*?)""", RegexOptions.Singleline).Value.Replace(@"div id=""zplayerjs - wrapper"" class=""player mt0"" data-xml=""", "").Replace("\"", "");
+                string getJsonURL = Regex.Match(htmlSong, @"<div id=""zplayerjs-wrapper"" class=""player mt0"" data-xml=""(.*?)""", RegexOptions.Singleline).Value.Replace(@"<div id=""zplayerjs-wrapper"" class=""player mt0"" data-xml=""", "").Replace("\"", "");
                 string jsonInfo = http.Get(@"https://mp3.zing.vn" + getJsonURL).ToString();
                 JObject jObject = JObject.Parse(jsonInfo);
 
