@@ -124,6 +124,12 @@ namespace Music_MP3
             ucSong_Play.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Song song = (sender as Button).DataContext as Song;
